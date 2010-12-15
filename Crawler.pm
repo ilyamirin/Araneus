@@ -25,6 +25,17 @@ sub load_page {
     $body =~ s/&[^;]+;/ /gi;
 
     #TODO:: remove hidden elements
+
+    #parse
+
+    while ( $body =~ s/<h([1-6])[^>]*>([\s\S]+?)<\/h\1>/ /i ) {
+        #print $1 . ': ' . $2 . "\n";
+    }#while
+
+    while ( $body =~ s/<(a|i|b(?<=>)|strong|code|blockquote)[^>]*>([\s\S]*?)<\/\1>/ /i ) {
+        print '------------' .$1 .'------------' . "\n";
+        print $2 . "\n";
+    }#while    
     
     #get links
 
@@ -37,7 +48,7 @@ sub load_page {
     map { $_ = $page . $1 if $_ =~ /^\.?\/(.+)$/ } @links;
     map { $_ .= '/' if $_ =~ /.+(?<!\/)$/ } @links;
 
-    print( $_ . "\n" ) foreach @links;
+    #print( $_ . "\n" ) foreach @links;
 
     #print $body;
     print "\n";
