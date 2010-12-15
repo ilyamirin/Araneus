@@ -18,11 +18,13 @@ sub load_page {
 
     $body = decode( $1, $body ) if $1;
 
-    #ignore comments, scripts, images, noindex and hidden    
-
-    $body =~ s/<$_[\s\S]+?\/$_>/ /g for qw/img noindex script/;    
+    $body =~ s/<$_[\s\S]+?\/$_>/ /g for qw/ img noindex script form /;    
 
     $body =~ s/<!--[\s\S]+?-->/ /g;
+
+    $body =~ s/&[^;]+;/ /gi;
+
+    #TODO:: remove hidden elements
     
     #get links
 
@@ -32,12 +34,13 @@ sub load_page {
     
     @links = grep { $_ if $_ =~ /^(http:\/\/)?[A-Za-zА-Яа-я0-9\.\/]+$/ig } @links;
 
-    map { $_ = $page . $1 if $_ =~ /^\.?\/(.+)$/i } @links;
+    map { $_ = $page . $1 if $_ =~ /^\.?\/(.+)$/ } @links;
+    map { $_ .= '/' if $_ =~ /.+(?<!\/)$/ } @links;
 
-    #print( $_ . "\n" ) foreach @links;
+    print( $_ . "\n" ) foreach @links;
 
-    print $body . "\n";
-
+    #print $body;
+    print "\n";
     
 }
 
