@@ -14,13 +14,15 @@ sub load_page {
 
     my $body = $self->body;
 
-    $self->body =~ /<meta\s.*content=.+charset=([^;\s>"]+)/i;
+    $body =~ /<meta\s.*content=.+charset=([^;\s>"]+)/i;
 
     $body = decode( $1, $body ) if $1;
 
-    #ignore comments and hidden
+    #ignore comments, scripts, images, noindex and hidden    
 
-    #$body =~ s/<!--[^(-->)]+//ig;
+    $body =~ s/<$_[\s\S]+?\/$_>/ /g for qw/img noindex script/;    
+
+    $body =~ s/<!--[\s\S]+?-->/ /g;
     
     #get links
 
@@ -34,12 +36,8 @@ sub load_page {
 
     #print( $_ . "\n" ) foreach @links;
 
-    #remove tags
-
-    #/<\/?.+>/
-
     print $body . "\n";
-    #return $body;    
+
     
 }
 
