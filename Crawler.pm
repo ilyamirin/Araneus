@@ -5,7 +5,32 @@ use utf8;
 
 use Encode;
 
+#TODO:: добавить логирование
+#TODO:: добавить конфигу
+#TODO:: добавить схему
+#TODO:: обрабатывать robots.txt
+#TODO:: обрабатывать метатеги
+
 extends qw/ HTTP::Lite /;
+
+has config => ( is => 'rw' , isa => 'HashRef', default => sub {
+    {
+        coefficients => {
+            'h1'         => 3,
+            'h2'         => 2,
+            'h3'         => 1,
+            'h4'         => 1.5,
+            'h5'         => 1.3,
+            'h6'         => 1.1,            
+            'a'          => 3,
+            'i'          => 1.2,
+            'b'          => 2,
+            'strong'     => 2,
+            'code'       => 3,
+            'blockquote' => 3,            
+        },#coefficients
+    }
+} );
 
 sub load_page {
     my ( $self, $page ) = @_;
@@ -28,7 +53,7 @@ sub load_page {
 
     #parse
 
-    while ( $body =~ s/<h([1-6])[^>]*>([\s\S]+?)<\/h\1>/ /i ) {
+    while ( $body =~ s/<(h[1-6])[^>]*>([\s\S]+?)<\1>/ /i ) {
         #print $1 . ': ' . $2 . "\n";
     }#while
 
